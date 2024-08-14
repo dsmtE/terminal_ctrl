@@ -3,11 +3,16 @@
 #include <string_view>
 #include <iostream>
 #include <cstdio>
+#include <optional>
 
 #ifdef _WIN32
 	#include <windows.h>  // for WinAPI and Sleep()
     #include <minwindef.h>
     #include <wincon.h>
+    #include <conio.h>    // for getch() and kbhit()
+
+    #define getch _getch
+	#define kbhit _kbhit
 #else
 	#include <termios.h>
 	#include <time.h>   /* for nanosleep() */
@@ -360,6 +365,364 @@ inline void restore_default_attributes() {
 #else
     std::cout << ANSI_ATTRIBUTE_RESET;
 #endif
+}
+
+enum class KeyCode {
+
+    KEY_a,
+    KEY_b,
+    KEY_c,
+    KEY_d,
+    KEY_e,
+    KEY_f,
+    KEY_g,
+    KEY_h,
+    KEY_i,
+    KEY_j,
+    KEY_k,
+    KEY_l,
+    KEY_m,
+    KEY_n,
+    KEY_o,
+    KEY_p,
+    KEY_q,
+    KEY_r,
+    KEY_s,
+    KEY_t,
+    KEY_u,
+    KEY_v,
+    KEY_w,
+    KEY_x,
+    KEY_y,
+    KEY_z,
+
+    KEY_A,
+    KEY_B,
+    KEY_C,
+    KEY_D,
+    KEY_E,
+    KEY_F,
+    KEY_G,
+    KEY_H,
+    KEY_I,
+    KEY_J,
+    KEY_K,
+    KEY_L,
+    KEY_M,
+    KEY_N,
+    KEY_O,
+    KEY_P,
+    KEY_Q,
+    KEY_R,
+    KEY_S,
+    KEY_T,
+    KEY_U,
+    KEY_V,
+    KEY_W,
+    KEY_X,
+    KEY_Y,
+    KEY_Z,
+
+	KEY_ESCAPE,
+	KEY_ENTER,
+	KEY_SPACE,
+
+	KEY_INSERT,
+	KEY_HOME,
+	KEY_PGUP,
+	KEY_DELETE,
+	KEY_END,
+	KEY_PGDOWN,
+    KEY_TAB,
+
+	KEY_UP,
+	KEY_DOWN,
+	KEY_LEFT,
+	KEY_RIGHT,
+
+    KEY_0,
+    KEY_1,
+    KEY_2,
+    KEY_3,
+    KEY_4,
+    KEY_5,
+    KEY_6,
+    KEY_7,
+    KEY_8,
+    KEY_9,
+
+	KEY_NUMDEL,
+	KEY_NUMPAD0,
+	KEY_NUMPAD1,
+	KEY_NUMPAD2,
+	KEY_NUMPAD3,
+	KEY_NUMPAD4,
+	KEY_NUMPAD5,
+	KEY_NUMPAD6,
+	KEY_NUMPAD7,
+	KEY_NUMPAD8,
+	KEY_NUMPAD9,
+
+    KEY_F1,
+    KEY_F2,
+    KEY_F3,
+    KEY_F4,
+    KEY_F5,
+    KEY_F6,
+    KEY_F7,
+    KEY_F8,
+    KEY_F9,
+    KEY_F10,
+    KEY_F11,
+    KEY_F12,
+};
+
+constexpr std::string_view KeyCodeToString(KeyCode const key) {
+    switch (key) {
+        case KeyCode::KEY_a: return "a";
+        case KeyCode::KEY_b: return "b";
+        case KeyCode::KEY_c: return "c";
+        case KeyCode::KEY_d: return "d";
+        case KeyCode::KEY_e: return "e";
+        case KeyCode::KEY_f: return "f";
+        case KeyCode::KEY_g: return "g";
+        case KeyCode::KEY_h: return "h";
+        case KeyCode::KEY_i: return "i";
+        case KeyCode::KEY_j: return "j";
+        case KeyCode::KEY_k: return "k";
+        case KeyCode::KEY_l: return "l";
+        case KeyCode::KEY_m: return "m";
+        case KeyCode::KEY_n: return "n";
+        case KeyCode::KEY_o: return "o";
+        case KeyCode::KEY_p: return "p";
+        case KeyCode::KEY_q: return "q";
+        case KeyCode::KEY_r: return "r";
+        case KeyCode::KEY_s: return "s";
+        case KeyCode::KEY_t: return "t";
+        case KeyCode::KEY_u: return "u";
+        case KeyCode::KEY_v: return "v";
+        case KeyCode::KEY_w: return "w";
+        case KeyCode::KEY_x: return "x";
+        case KeyCode::KEY_y: return "y";
+        case KeyCode::KEY_z: return "z";
+
+        case KeyCode::KEY_A: return "A";
+        case KeyCode::KEY_B: return "B";
+        case KeyCode::KEY_C: return "C";
+        case KeyCode::KEY_D: return "D";
+        case KeyCode::KEY_E: return "E";
+        case KeyCode::KEY_F: return "F";
+        case KeyCode::KEY_G: return "G";
+        case KeyCode::KEY_H: return "H";
+        case KeyCode::KEY_I: return "I";
+        case KeyCode::KEY_J: return "J";
+        case KeyCode::KEY_K: return "K";
+        case KeyCode::KEY_L: return "L";
+        case KeyCode::KEY_M: return "M";
+        case KeyCode::KEY_N: return "N";
+        case KeyCode::KEY_O: return "O";
+        case KeyCode::KEY_P: return "P";
+        case KeyCode::KEY_Q: return "Q";
+        case KeyCode::KEY_R: return "R";
+        case KeyCode::KEY_S: return "S";
+        case KeyCode::KEY_T: return "T";
+        case KeyCode::KEY_U: return "U";
+        case KeyCode::KEY_V: return "V";
+        case KeyCode::KEY_W: return "W";
+        case KeyCode::KEY_X: return "X";
+        case KeyCode::KEY_Y: return "Y";
+        case KeyCode::KEY_Z: return "Z";
+
+        case KeyCode::KEY_ESCAPE: return "ESCAPE";
+        case KeyCode::KEY_ENTER: return "ENTER";
+        case KeyCode::KEY_SPACE: return "SPACE";
+
+        case KeyCode::KEY_INSERT: return "INSERT";
+        case KeyCode::KEY_HOME: return "HOME";
+        case KeyCode::KEY_PGUP: return "PGUP";
+        case KeyCode::KEY_DELETE: return "DELETE";
+        case KeyCode::KEY_END: return "END";
+        case KeyCode::KEY_PGDOWN: return "PGDOWN";
+        case KeyCode::KEY_TAB: return "TAB";
+
+        case KeyCode::KEY_UP: return "UP";
+        case KeyCode::KEY_DOWN: return "DOWN";
+        case KeyCode::KEY_LEFT: return "LEFT";
+        case KeyCode::KEY_RIGHT: return "RIGHT";
+
+        case KeyCode::KEY_0: return "0";
+        case KeyCode::KEY_1: return "1";
+        case KeyCode::KEY_2: return "2";
+        case KeyCode::KEY_3: return "3";
+        case KeyCode::KEY_4: return "4";
+        case KeyCode::KEY_5: return "5";
+        case KeyCode::KEY_6: return "6";
+        case KeyCode::KEY_7: return "7";
+        case KeyCode::KEY_8: return "8";
+        case KeyCode::KEY_9: return "9";
+
+        case KeyCode::KEY_NUMDEL: return "NUMDEL";
+        case KeyCode::KEY_NUMPAD0: return "NUMPAD0";
+        case KeyCode::KEY_NUMPAD1: return "NUMPAD1";
+        case KeyCode::KEY_NUMPAD2: return "NUMPAD2";
+        case KeyCode::KEY_NUMPAD3: return "NUMPAD3";
+        case KeyCode::KEY_NUMPAD4: return "NUMPAD4";
+        case KeyCode::KEY_NUMPAD5: return "NUMPAD5";
+        case KeyCode::KEY_NUMPAD6: return "NUMPAD6";
+        case KeyCode::KEY_NUMPAD7: return "NUMPAD7";
+        case KeyCode::KEY_NUMPAD8: return "NUMPAD8";
+        case KeyCode::KEY_NUMPAD9: return "NUMPAD9";
+
+        case KeyCode::KEY_F1 : return "F1";
+        case KeyCode::KEY_F2 : return "F2";
+        case KeyCode::KEY_F3 : return "F3";
+        case KeyCode::KEY_F4 : return "F4";
+        case KeyCode::KEY_F5 : return "F5";
+        case KeyCode::KEY_F6 : return "F6";
+        case KeyCode::KEY_F7 : return "F7";
+        case KeyCode::KEY_F8 : return "F8";
+        case KeyCode::KEY_F9 : return "F9";
+        case KeyCode::KEY_F10: return "F10";
+        case KeyCode::KEY_F11: return "F11";
+        case KeyCode::KEY_F12: return "F12";
+
+        default: return "UNKNOWN";
+    }
+}
+
+// Steam operator for KeyCode
+inline std::ostream& operator<<(std::ostream& os, KeyCode const key) {
+    return os << KeyCodeToString(key);
+}
+
+/* Functions covered by Window's conio.h */
+#ifndef _WIN32
+
+/**
+ * @brief Get a charater without waiting on a Return
+ * @details Windows has this functionality in conio.h
+ * @return The character
+ */
+int getch(void) {
+	struct termios oldt, newt;
+	int ch;
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	newt.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	return ch;
+}
+/**
+ * @brief Determines if a button was pressed.
+ * @details Windows has this in conio.h
+ * @return Number of characters read
+ */
+int kbhit(void) {
+	static struct termios oldt, newt;
+	int cnt = 0;
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	newt.c_lflag    &= ~(ICANON | ECHO);
+	newt.c_iflag     = 0; /* input mode */
+	newt.c_oflag     = 0; /* output mode */
+	newt.c_cc[VMIN]  = 1; /* minimum time to wait */
+	newt.c_cc[VTIME] = 1; /* minimum characters to wait for */
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	ioctl(0, FIONREAD, &cnt); /* Read count */
+	struct timeval tv;
+	tv.tv_sec  = 0;
+	tv.tv_usec = 100;
+	select(STDIN_FILENO+1, NULL, NULL, NULL, &tv); /* A small time delay */
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	return cnt; /* Return number of characters */
+}
+#endif /* _WIN32 */
+
+
+inline KeyCode blocking_get_key() {
+#ifndef _WIN32
+	int cnt { kbhit() }; // for ANSI escapes processing
+#endif
+    int k { getch() };
+    if(k >= 97 && k < 123) { //lowercase
+        return static_cast<KeyCode>(static_cast<int>(KeyCode::KEY_a) + k - 97);
+    }
+
+    if(k >= 65 && k < 91) { //uppercase
+        return static_cast<KeyCode>(static_cast<int>(KeyCode::KEY_A) + k - 65);
+    }
+
+	switch(k) {
+        case 0: {
+            int kk;
+            switch (kk = getch()) {
+            case 71: return KeyCode::KEY_NUMPAD7;
+            case 72: return KeyCode::KEY_NUMPAD8;
+            case 73: return KeyCode::KEY_NUMPAD9;
+            case 75: return KeyCode::KEY_NUMPAD4;
+            case 77: return KeyCode::KEY_NUMPAD6;
+            case 79: return KeyCode::KEY_NUMPAD1;
+            case 80: return KeyCode::KEY_NUMPAD2;
+            case 81: return KeyCode::KEY_NUMPAD3;
+            case 82: return KeyCode::KEY_NUMPAD0;
+            case 83: return KeyCode::KEY_NUMDEL;
+            default:
+                return static_cast<KeyCode>(kk-59+static_cast<int>(KeyCode::KEY_F1)); // Function keys
+            }
+        }
+        case 224: {
+            int kk;
+            switch (kk = getch()) {
+            case 71: return KeyCode::KEY_HOME;
+            case 72: return KeyCode::KEY_UP;
+            case 73: return KeyCode::KEY_PGUP;
+            case 75: return KeyCode::KEY_LEFT;
+            case 77: return KeyCode::KEY_RIGHT;
+            case 79: return KeyCode::KEY_END;
+            case 80: return KeyCode::KEY_DOWN;
+            case 81: return KeyCode::KEY_PGDOWN;
+            case 82: return KeyCode::KEY_INSERT;
+            case 83: return KeyCode::KEY_DELETE;
+            default:
+                return static_cast<KeyCode>(kk-123+static_cast<int>(KeyCode::KEY_F1)); // Function keys
+            }
+        }
+        case 9: return KeyCode::KEY_TAB;
+        case 13: return KeyCode::KEY_ENTER;
+#ifdef _WIN32
+	    case 27: return KeyCode::KEY_ESCAPE;
+#else // _WIN32
+
+        case 48: return KeyCode::KEY_0;
+        case 49: return KeyCode::KEY_1;
+        case 50: return KeyCode::KEY_2;
+        case 51: return KeyCode::KEY_3;
+        case 52: return KeyCode::KEY_4;
+        case 53: return KeyCode::KEY_5;
+        case 54: return KeyCode::KEY_6;
+        case 55: return KeyCode::KEY_7;
+        case 56: return KeyCode::KEY_8;
+        case 57: return KeyCode::KEY_9;
+
+        case 155: // single-character CSI
+        case 27: {
+            // Process ANSI escape sequences 
+            if (cnt >= 3 && getch() == '[') {
+                switch (k = getch()) {
+                case 'A': return KeyCode::KEY_UP;
+                case 'B': return KeyCode::KEY_DOWN;
+                case 'C': return KeyCode::KEY_RIGHT;
+                case 'D': return KeyCode::KEY_LEFT;
+                default: return KeyCode::KEY_ESCAPE;
+                }
+            } else return KeyCode::KEY_ESCAPE;
+        }
+#endif // _WIN32
+    default:
+        return static_cast<KeyCode>(k);
+    }
 }
 
 } // namespace TerminalCtrl
