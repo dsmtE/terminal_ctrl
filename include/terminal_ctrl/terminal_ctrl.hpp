@@ -10,6 +10,8 @@
     #include <wincon.h>
 #else
 	#include <termios.h>
+    #include <unistd.h>
+    #include <sys/ioctl.h>
 	#include <time.h>   /* for nanosleep() */
 #endif
 
@@ -147,8 +149,6 @@ constexpr std::string_view ANSI_ATTRIBUTE_RESET {"\033[0m"};
 
 constexpr std::string_view ANSI_CONSOLE_TITLE_PRE {"\033]0};"};
 constexpr std::string_view ANSI_CONSOLE_TITLE_POST {"\007"};
-
-constexpr std::string_view ANSI_ATTRIBUTE_RESET {"\033[0m"};
 
 constexpr std::string_view ANSI_CURSOR_HIDE {"\033[?25l"};
 constexpr std::string_view ANSI_CURSOR_SHOW {"\033[?25h"};
