@@ -178,7 +178,7 @@ inline bool get_cursor_position(unsigned int& x, unsigned int& y) {
 
     write(1, "\033[6n", 4);
 
-    for(int i = 0, ch = 0; ch != 'R'; i++)
+    for(i = 0, ch = 0; ch != 'R'; i++)
     {
         if (!read(0, &ch, 1)) {
             tcsetattr(0, TCSANOW, &restore);
